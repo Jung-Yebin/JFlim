@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOVIERANK</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gasoek+One&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gasoek+One&family=Gowun+Batang&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    <link href="/public/main.css" rel="stylesheet"/>
+
+    <style>
+        /* .col-md-13{
+            margin-left: 500px;
+        } */
+        .swiper {
+            width: 100%;
+            height: 350px;
+        }
+        .swiper-slide {
+            text-align: center;
+            font-size: 18px;
+            background: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .swiper-slide img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        #ratedmovie-container{
+            margin-top: 50px;
+            position: relative;
+            span a {
+                font-size : 20px;
+                position: absolute;
+                right: 0;
+                margin-top : 3px;
+            }
+        }
+
+
+    </style>
+</head>
+</head>
+<body>
+    <!-- <nav class="navbar navbar-light" style="background-color: #0A1D56;">
+        <a class="navbar-brand" href="/" id = "title_id">
+            <span style="color:#fff"><%= locals.title %></span>
+        </a>
+
+        <ul class="nav justify-content-end">
+            <li class="nav-item">
+              <a class="nav-link active" href="/login">LOGIN</a>
+            </li>
+        </ul>
+    </nav>
+     -->
+    <% if (locals.user_id) { %>
+        <nav class="navbar navbar-light" style="background-color: #0A1D56;">
+            <a class="navbar-brand" href="/" id = "title_id">
+                <!--<img src="./logo_img.png" width="30" height="30" class="d-inline-block align-top" alt="" loading="lazy"> -->
+                <span style="color:#fff"><%= locals.title %></span>
+            </a>
+    
+            <ul class="nav justify-content-end">
+                <li class="nav-item">
+                  <a class="nav-link active"><%= locals.user_id %>님, 안녕하세요</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/userinfo">UserInfo</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/logout">Logout</a>
+                </li>
+            </ul>
+        </nav>
+    <% } else { %>
+        <nav class="navbar navbar-light" style="background-color: #0A1D56;">
+            <a class="navbar-brand" href="/" id = "title_id">
+                <!--<img src="./logo_img.png" width="30" height="30" class="d-inline-block align-top" alt="" loading="lazy"> -->
+                <span style="color:#fff"><%= locals.title %></span>
+            </a>
+    
+            <ul class="nav justify-content-end">
+                <li class="nav-item">
+                  <a class="nav-link active" href="/login">LOGIN</a>
+                </li>
+            </ul>
+        </nav>
+    <% } %>
+    <div class="container" id="main-container">
+        <div class="row">
+            <h2>Trending</h2>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner" id="carouselInner">
+                        <!-- Your carousel items go here -->
+                    </div>
+                    <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#carouselExampleCaptions" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+            </div>
+            <br/></br>
+            <% if (locals.user_id && Object.keys(locals.dict_usermovie).length > 0) { %>
+            <div class="container" id="ratedmovie-container">
+                <div class="row">
+                    <h2> Rated Moive <span><a href="/allratedmovie" style="text-decoration: none;">view more</a></span></h2>
+                </div>
+                <!-- Swiper -->
+                <div class="swiper mySwiper swiper-initialized swiper-horizontal swiper-backface-hidden">
+                    <div class="swiper-wrapper" id="swiper-wrapper-b79a58c365105b8f10" aria-live="polite" style="transition-duration: 0ms; transform: translate3d(-332px, 0px, 0px); transition-delay: 0ms;">
+                        <div class="swiper-slide swiper-slide-prev" role="group" aria-label="1 / 9" style="width: 302px; margin-right: 30px;">Slide 1</div>
+                        <div class="swiper-slide swiper-slide-active" role="group" aria-label="2 / 9" style="width: 302px; margin-right: 30px;">Slide 2</div>
+                        <div class="swiper-slide swiper-slide-next" role="group" aria-label="3 / 9" style="width: 302px; margin-right: 30px;">Slide 3</div>
+                        <div class="swiper-slide" role="group" aria-label="4 / 9" style="width: 302px; margin-right: 30px;">Slide 4</div>
+                        <div class="swiper-slide" role="group" aria-label="5 / 9" style="width: 302px; margin-right: 30px;">Slide 5</div>
+                        <div class="swiper-slide" role="group" aria-label="6 / 9" style="width: 302px; margin-right: 30px;">Slide 6</div>
+                        <div class="swiper-slide" role="group" aria-label="7 / 9" style="width: 302px; margin-right: 30px;">Slide 7</div>
+                        <div class="swiper-slide" role="group" aria-label="8 / 9" style="width: 302px; margin-right: 30px;">Slide 8</div>
+                        <div class="swiper-slide" role="group" aria-label="9 / 9" style="width: 302px; margin-right: 30px;">Slide 9</div>
+                    </div>
+  
+                    <div class="swiper-button-prev swiper-button-disabled" tabindex="0" role="button" aria-label="Previous slide" aria-disabled="true"></div>
+                    <div class="swiper-button-next" tabindex="0" role="button" aria-label="Next slide" aria-disabled="false"></div>
+                    <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
+        
+                    <!-- <div class="swiper-pagination swiper-pagination-clickable swiper-pagination-bullets swiper-pagination-horizontal"><span class="swiper-pagination-bullet" tabindex="0" role="button" aria-label="Go to slide 1"></span><span class="swiper-pagination-bullet swiper-pagination-bullet-active" tabindex="0" role="button" aria-label="Go to slide 2" aria-current="true"></span><span class="swiper-pagination-bullet" tabindex="0" role="button" aria-label="Go to slide 3"></span><span class="swiper-pagination-bullet" tabindex="0" role="button" aria-label="Go to slide 4"></span><span class="swiper-pagination-bullet" tabindex="0" role="button" aria-label="Go to slide 5"></span><span class="swiper-pagination-bullet" tabindex="0" role="button" aria-label="Go to slide 6"></span><span class="swiper-pagination-bullet" tabindex="0" role="button" aria-label="Go to slide 7"></span></div> -->
+                <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span></div>
+            </div>
+            <% } else { %>
+            <% } %>
+            <br/></br>
+            <div class="container" id="top-ranking-movie-container">
+                <br/></br>
+                <h2>Top Ranking Movies</h2>
+                <div class="swiper top-ranking-movie-swiper swiper-initialized swiper-horizontal swiper-backface-hidden">
+                    <div class="swiper-wrapper" id="swiper-wrapper-b79a58c365105b8f11" aria-live="polite" style="transition-duration: 0ms; transform: translate3d(-332px, 0px, 0px); transition-delay: 0ms;">
+                        <div class="swiper-slide swiper-slide-prev" role="group" aria-label="1 / 9" style="width: 302px; margin-right: 30px;">Slide 1</div>
+                        <div class="swiper-slide swiper-slide-active" role="group" aria-label="2 / 9" style="width: 302px; margin-right: 30px;">Slide 2</div>
+                        <div class="swiper-slide swiper-slide-next" role="group" aria-label="3 / 9" style="width: 302px; margin-right: 30px;">Slide 3</div>
+                        <div class="swiper-slide" role="group" aria-label="4 / 9" style="width: 302px; margin-right: 30px;">Slide 4</div>
+                        <div class="swiper-slide" role="group" aria-label="5 / 9" style="width: 302px; margin-right: 30px;">Slide 5</div>
+                        <div class="swiper-slide" role="group" aria-label="6 / 9" style="width: 302px; margin-right: 30px;">Slide 6</div>
+                        <div class="swiper-slide" role="group" aria-label="7 / 9" style="width: 302px; margin-right: 30px;">Slide 7</div>
+                        <div class="swiper-slide" role="group" aria-label="8 / 9" style="width: 302px; margin-right: 30px;">Slide 8</div>
+                        <div class="swiper-slide" role="group" aria-label="9 / 9" style="width: 302px; margin-right: 30px;">Slide 9</div>
+                    </div>
+  
+                    <div class="ranking-button-prev swiper-button-disabled" tabindex="0" role="button" aria-label="Previous slide" aria-disabled="true"></div>
+                    <div class="ranking-button-next" tabindex="0" role="button" aria-label="Next slide" aria-disabled="false"></div>
+                    <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
+        
+                    <!-- <div class="swiper-pagination swiper-pagination-clickable swiper-pagination-bullets swiper-pagination-horizontal"><span class="swiper-pagination-bullet" tabindex="0" role="button" aria-label="Go to slide 1"></span><span class="swiper-pagination-bullet swiper-pagination-bullet-active" tabindex="0" role="button" aria-label="Go to slide 2" aria-current="true"></span><span class="swiper-pagination-bullet" tabindex="0" role="button" aria-label="Go to slide 3"></span><span class="swiper-pagination-bullet" tabindex="0" role="button" aria-label="Go to slide 4"></span><span class="swiper-pagination-bullet" tabindex="0" role="button" aria-label="Go to slide 5"></span><span class="swiper-pagination-bullet" tabindex="0" role="button" aria-label="Go to slide 6"></span><span class="swiper-pagination-bullet" tabindex="0" role="button" aria-label="Go to slide 7"></span></div> -->
+                <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span></div>
+            </div>
+            <div class = "container" id = "top-count-movie-container">
+                <br/></br>
+                <h2>Most Watched Ranking</h2>
+                <div class="swiper top-count-movie-swiper swiper-initialized swiper-horizontal swiper-backface-hidden">
+                    <div class="swiper-wrapper" id="swiper-wrapper-b79a58c365105b8f12" aria-live="polite" style="transition-duration: 0ms; transform: translate3d(-332px, 0px, 0px); transition-delay: 0ms;">
+                        <div class="swiper-slide swiper-slide-prev" role="group" aria-label="1 / 9" style="width: 302px; margin-right: 30px;">Slide 1</div>
+                        <div class="swiper-slide swiper-slide-active" role="group" aria-label="2 / 9" style="width: 302px; margin-right: 30px;">Slide 2</div>
+                        <div class="swiper-slide swiper-slide-next" role="group" aria-label="3 / 9" style="width: 302px; margin-right: 30px;">Slide 3</div>
+                        <div class="swiper-slide" role="group" aria-label="4 / 9" style="width: 302px; margin-right: 30px;">Slide 4</div>
+                        <div class="swiper-slide" role="group" aria-label="5 / 9" style="width: 302px; margin-right: 30px;">Slide 5</div>
+                        <div class="swiper-slide" role="group" aria-label="6 / 9" style="width: 302px; margin-right: 30px;">Slide 6</div>
+                        <div class="swiper-slide" role="group" aria-label="7 / 9" style="width: 302px; margin-right: 30px;">Slide 7</div>
+                        <div class="swiper-slide" role="group" aria-label="8 / 9" style="width: 302px; margin-right: 30px;">Slide 8</div>
+                        <div class="swiper-slide" role="group" aria-label="9 / 9" style="width: 302px; margin-right: 30px;">Slide 9</div>
+                    </div>
+  
+                    <div class="count-button-prev swiper-button-disabled" tabindex="0" role="button" aria-label="Previous slide" aria-disabled="true"></div>
+                    <div class="count-button-next" tabindex="0" role="button" aria-label="Next slide" aria-disabled="false"></div>
+                    <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        $(document).ready(function () {
+        let accessToken = "";
+
+        const options = {
+            method: 'GET',
+            headers: {
+                accept: 'application/json',
+                Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4Y2RiMTA4NmJmYjY1OTdkNzkyYTQwMTE4NjM5NmQwZSIsInN1YiI6IjY1YWNmMGE5ZjI2M2JhMDBlYWIzYmM0ZiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.2XC3aT7eN4o25YFPRrg5w2_DevTdrINWE9T6aNT00qc'
+            }
+        };
+
+        //Initialize Swiper
+        var swiper = new Swiper(".mySwiper", {
+        slidesPerView: 5,
+        spaceBetween: 30,
+        initialSlide: 1, // 초기 슬라이드 인덱스를 0으로 설정
+        pagination: {
+          el: ".swiper-pagination",
+          clickable: true,
+        },
+        navigation: {
+            nextEl : '.swiper-button-next',
+            prevEl : '.swiper-button-prev'
+        }
+        });
+
+        //Initialize rankingSwiper
+        var swiper = new Swiper(".top-ranking-movie-swiper", {
+            slidesPerView: 5,
+            spaceBetween: 30,
+            initialSlide: 1,
+            pagination : {
+                el : ".ranking-pagination",
+                clickable: true,
+            },
+            navigation : {
+                nextEl : '.ranking-button-next',
+                prevEl : '.ranking-button-prev'
+            }
+
+        })
+        //Initialize rankingSwiper
+         var swiper = new Swiper(".top-count-movie-swiper", {
+            slidesPerView: 5,
+            spaceBetween: 30,
+            initialSlide: 1,
+            pagination : {
+                el : ".count-pagination",
+                clickable: true,
+            },
+            navigation : {
+                nextEl : '.count-button-next',
+                prevEl : '.count-button-prev'
+            }
+
+        })
+
+        // TMDB 의 TRENDING 영화
+        fetch('https://api.themoviedb.org/3/movie/popular?language=en-US&page=1', options)
+            .then(response => response.json())
+            .then(response => {
+                $("#carouselInner").html('')
+                 let data = response;
+                 console.log(data);  // 데이터 확인
+
+                 let carouselInner = $("#carouselInner");
+
+                 for (let movieIndex = 0; movieIndex < data.results.length; movieIndex++){
+                    let movie = data.results[movieIndex];
+
+                    //유튜브링크 넣기
+                    fetch(`https://api.themoviedb.org/3/movie/${movie.id}/videos?language=en-US`, options)
+                    .then(response => response.json())
+                    .then(response => {
+                        let videoKey = response
+                        // console.log(videoKey.results)
+                        // console.log(movieIndex);
+
+                        let youtubeLink = ''
+                        for (let j = 0; j < videoKey.results.length; j++){
+
+                            if (videoKey.results[j].name.includes("Official Trailer") || videoKey.results[j].name.includes("Official Clip")){
+                                youtubeLink = `https://www.youtube.com/watch?v=${videoKey.results[j].key}`;
+                                break;
+                            }
+                            else{
+                                youtubeLink = `https://www.youtube.com/watch?v=${videoKey.results[videoKey.results.length - 1].key}`;
+                            }
+                        }
+
+                        let carouselItem = `<div class="carousel-item ${movieIndex === 0 ? 'active' : ''}">
+                        <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" class="d-block custom-img" alt="${movie.title}" onclick="openPopup('${movie.title}', '${movie.genre_ids}', '${movie.poster_path}', '${movie.release_date}', '${movie.id}')">
+                        <div class="carousel-caption d-none d-md-block">
+                            <h5>${movie.title}</h5>
+                            <p>${movie.overview}</p>
+                            <button type="button" class="btn btn-primary" id="youtube-video" onclick="openTrailer('${youtubeLink}')">트레일러보기</button>
+                        </div>
+                    </div>`;
+
+                    carouselInner.append(carouselItem);
+                    let style = document.createElement('style');
+                    style.innerHTML = `
+                    .carousel-inner .carousel-item:nth-child(${movieIndex + 1})::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    bottom: 0;
+                    left: 0;
+                    background: url('https://image.tmdb.org/t/p/w500${movie.poster_path}') top 20% center/cover no-repeat;
+                    opacity: 0.5;
+                    z-index: -1;
+                    }`;
+                    document.head.appendChild(style);
+
+                    })
+                    function refreshToken() {
+
+                    }
+
+                    // 페이지 로드 시 토큰 갱신
+                    refreshToken();
+                }
+            })
+            .catch(err => console.error(err));
+            function refreshToken() {
+                // 토큰 갱신 로직 추가 (예: 서버에서 새 토큰을 가져와서 accessToken 변수에 저장)
+                // 이 예제에서는 토큰이 저장된 accessToken 변수를 사용하도록 가정하고 있습니다.
+                // 실제로는 서버에서 새 토큰을 가져와서 accessToken 변수에 할당하는 로직을 작성해야 합니다.
+            }
+
+            // 페이지 로드 시 토큰 갱신
+            refreshToken();
+        
+        //user가 평가한 영화
+        const user_id = '<%= locals.user_id%>'
+        if(user_id){
+            let data = '<%= JSON.stringify(locals.dict_usermovie)%>'
+            data = JSON.parse(data.replace(/&#34;/g, '"'))
+            console.log(data);
+            $('#swiper-wrapper-b79a58c365105b8f10').html('');
+
+            let swiperInner = $("#swiper-wrapper-b79a58c365105b8f10");
+
+            for (const movieId in data) {
+                console.log(data[movieId]);
+            }
+
+            const keys = Object.keys(data);
+            const length = keys.length;
+            console.log(keys);
+            console.log(length);
+
+            for(let movieIndex=0; movieIndex < length; movieIndex++){
+                let swiperItem = `<div class="swiper-slide" role="group" aria-label="${movieIndex + 1} / ${length}" style="width: 242px; margin-right: 25px;"><img src="https://image.tmdb.org/t/p/w500${data[keys[movieIndex]].posterImg}" alt="Slide${movieIndex}" onclick="openPopup('${data[keys[movieIndex]].title}', '${data[keys[movieIndex]].genre}', '${data[keys[movieIndex]].posterImg}', '${data[keys[movieIndex]].date}', '${keys[movieIndex]}')"></div>`;
+
+                swiperInner.append(swiperItem);
+
+                console.log("키", keys[movieIndex]);
+            }
+        }
+
+        // top_ranking_movie_
+        const top_ranking_movie_dict_stringify = `<%= JSON.stringify(locals.top_ranking_movie_dict) %>`
+        const top_ranking_movie_dict = JSON.parse(top_ranking_movie_dict_stringify.replace(/&#34;/g, '"'));
+        console.log(top_ranking_movie_dict);
+
+        $('#swiper-wrapper-b79a58c365105b8f11').html('');
+        const top_ranking_movie_Inner = $('#swiper-wrapper-b79a58c365105b8f11');
+
+        const top_movie_ranking_keys = Object.keys(top_ranking_movie_dict);
+
+       
+        for (let ranking = 0; ranking < Object.keys(top_ranking_movie_dict).length; ranking++){
+            let card = `<div class="swiper-slide" role="group" aria-label="${ranking} / ${Object.keys(top_ranking_movie_dict).length}" style="width: 242px; margin-right: 25px;"><img src="https://image.tmdb.org/t/p/w500${top_ranking_movie_dict[top_movie_ranking_keys[ranking]].posterImg}" onclick="openPopup('${top_ranking_movie_dict[top_movie_ranking_keys[ranking]].title}', '${top_ranking_movie_dict[top_movie_ranking_keys[ranking]].genre}', '${top_ranking_movie_dict[top_movie_ranking_keys[ranking]].posterImg}', '${top_ranking_movie_dict[top_movie_ranking_keys[ranking]].date}', '${top_ranking_movie_dict[top_movie_ranking_keys[ranking]].movieID}')"></div>`
+            top_ranking_movie_Inner.append(card);
+        }
+
+        //top_count_movie
+        const top_count_movie_dict_stringify = `<%= JSON.stringify(locals.top_count_movie_dict) %>`
+        const top_count_movie_dict = JSON.parse(top_count_movie_dict_stringify.replace(/&#34;/g, '"'));
+        console.log(top_count_movie_dict);
+
+        $('#swiper-wrapper-b79a58c365105b8f12').html('');
+        const top_count_movie_Inner = $('#swiper-wrapper-b79a58c365105b8f12');
+
+        const top_movie_count_keys = Object.keys(top_count_movie_dict);
+
+        for (let count = 0; count < Object.keys(top_count_movie_dict).length; count++){
+            let card = `<div class="swiper-slide" role="group" aria-label="${count} / ${Object.keys(top_count_movie_dict).length}" style="width: 242px; margin-right: 25px;"><img src="https://image.tmdb.org/t/p/w500${top_count_movie_dict[top_movie_count_keys[count]].posterImg}"onclick="openPopup('${top_count_movie_dict[top_movie_count_keys[count]].title}', '${top_count_movie_dict[top_movie_count_keys[count]].genre}', '${top_count_movie_dict[top_movie_count_keys[count]].posterImg}', '${top_count_movie_dict[top_movie_count_keys[count]].date}', '${top_count_movie_dict[top_movie_count_keys[count]].movieID}')"></div>`
+            top_count_movie_Inner.append(card);
+        }
+
+    });
+
+    function openTrailer(youtubeLink){
+        window.open(youtubeLink, "_blank");
+    }
+
+    function openPopup(title,genre,posterImg,date,movieID){
+        window.location.href = `/detailedmovie?title=${encodeURIComponent(title)}&genre=${encodeURIComponent(genre)}&posterImg=${encodeURIComponent(posterImg)}&date=${encodeURIComponent(date)}&movieID=${encodeURIComponent(movieID)}`;
+    }
+
+    
+    </script>
+</body>
+</html>

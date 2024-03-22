@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>상세 정보</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gasoek+One&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gasoek+One&family=Gowun+Batang&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    <link href="/public/detailedmovie.css" rel="stylesheet"></link>
+    <style>
+    .swiper {
+        width: 100%;
+        height: 350px;
+    }
+    .swiper-slide {
+        text-align: center;
+        font-size: 18px;
+        background: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .swiper-slide img {
+        display: block;
+        width : 100%;
+        height: 100%;
+    }
+    #button-area {
+        background-color: #c0c0c0;
+    }
+    #AVG-Rating-container {
+        margin-left: 60px;
+        margin-top: -10px;
+    }
+    #AverageRating{
+        margin-left: 60px;
+    }
+    #PredictiveRating-container{
+        margin-left: 20px;
+    }
+    #PredictiveRating{
+        margin-left: 10px;
+    }
+    
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-light" style="background-color: #0A1D56;">
+        <a class="navbar-brand" href="/" id = "title_id">
+            <span style="color:#fff"><%= locals.title %></span>
+        </a>
+    </nav>
+    <div class="container" id="img-container"></div>
+    <div class="container" id="detailed-movie-container">
+        <p id="movieID-container"></p>
+        <h1><span id="title-container"></span></h1>
+        <h5><span id="genre-container"></span></h5>
+        <h5><span id="date-container"></span></h5>
+        <br/></br>
+        <div class="wrap-star">
+            <div class='star-rating'>
+                <span id="star-rating-span" style="width: 0;"></span>
+            </div>
+        </div>
+        <div class="container" id="rating-container">
+            <div class="rating-item">
+                <input type="radio" id="rating1" name="rating" value="1"><label for="rating1" title="1점"></label>
+                <input type="radio" id="rating2" name="rating" value="2"><label for="rating2" title="2점"></label>
+                <input type="radio" id="rating3" name="rating" value="3"><label for="rating3" title="3점"></label>
+                <input type="radio" id="rating4" name="rating" value="4"><label for="rating4" title="4점"></label>
+                <input type="radio" id="rating5" name="rating" value="5"><label for="rating5" title="5점"></label>
+            </div>
+        </div>
+        <div class="container" id="AVG-Rating-container">
+            <h3>AVG Rating</h3>
+            <h2><span id="AverageRating"></span></h2>
+        </div>
+        <% if (locals.user_id) { %>
+        <div class = "container" id="PredictiveRating-container">
+            <h3><span id="PredictiveRating"></span></h3>
+        </div>
+        <!-- <div>Average Rating : <span id="AverageRating"></span></div> -->
+        <!-- <div> 장바구니 가져온 데이터 : <%= locals.cartdataset %></div> -->
+        <% } else { %>
+        <% } %>
+        <div class="modal" id="warning-modal" tabindex="-1">
+            <div class="modal-modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Please Login</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>you log in, you can rate the movie.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container" id="comment-container">
+        <h2>Comment</h2>
+        <div class="container" id="comment-subcontainer">
+            <ul class="list-group", id="list-group" style="max-height: 400px; overflow-y : auto;">
+                <li class="list-group-item d-flex justify-content-between align-items-center", id="list_group_item">
+                  이 영화에는 아직 댓글이 없습니다.
+                </li>
+              </ul>
+        </div>
+        <div class="input-group mb-3", id="input-group">
+            <input type="text" class="form-control" id= "input-area" laceholder="Recipient's username" aria-label="Recipient's username" aria-describedby="button-addon2">
+            <button class="btn btn-outline-secondary" type="button" id="button-area" onclick="addComment()">추가</button>
+        </div>
+    </div>
+    <div class="container" id="related-container">
+        <div><h2>Related Movies</h2></div>
+            <!-- Swiper -->
+            <div class="swiper mySwiper swiper-initialized swiper-horizontal swiper-backface-hidden">
+                <div class="swiper-wrapper" id="swiper-wrapper-b79a58c365105b8f10" aria-live="polite" style="transition-duration: 0ms; transform: translate3d(-332px, 0px, 0px); transition-delay: 0ms;">
+                    <div class="swiper-slide" role="group" aria-label="1 / 9" style="width: 302px; margin-right: 30px;"></div>
+                    <div class="swiper-slide" role="group" aria-label="2 / 9" style="width: 302px; margin-right: 30px;">Slide 2</div>
+                    <div class="swiper-slide" role="group" aria-label="3 / 9" style="width: 302px; margin-right: 30px;">Slide 3</div>
+                    <div class="swiper-slide" role="group" aria-label="4 / 9" style="width: 302px; margin-right: 30px;">Slide 4</div>
+                    <div class="swiper-slide" role="group" aria-label="5 / 9" style="width: 302px; margin-right: 30px;">Slide 5</div>
+                    <div class="swiper-slide" role="group" aria-label="6 / 9" style="width: 302px; margin-right: 30px;">Slide 6</div>
+                    <div class="swiper-slide" role="group" aria-label="7 / 9" style="width: 302px; margin-right: 30px;">Slide 7</div>
+                    <div class="swiper-slide" role="group" aria-label="8 / 9" style="width: 302px; margin-right: 30px;">Slide 8</div>
+                    <div class="swiper-slide" role="group" aria-label="9 / 9" style="width: 302px; margin-right: 30px;">Slide 9</div>
+                </div>
+                <div class="swiper-button-prev swiper-button-disabled" tabindex="0" role="button" aria-label="Previous slide" aria-disabled="true"></div>
+                <div class="swiper-button-next" tabindex="0" role="button" aria-label="Next slide" aria-disabled="false"></div>
+                <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
+                <div class="swiper-pagination swiper-pagination-clickable swiper-pagination-bullets swiper-pagination-horizontal"><span class="swiper-pagination-bullet" tabindex="0" role="button" aria-label="Go to slide 1"></span><span class="swiper-pagination-bullet swiper-pagination-bullet-active" tabindex="0" role="button" aria-label="Go to slide 2" aria-current="true"></span><span class="swiper-pagination-bullet" tabindex="0" role="button" aria-label="Go to slide 3"></span><span class="swiper-pagination-bullet" tabindex="0" role="button" aria-label="Go to slide 4"></span><span class="swiper-pagination-bullet" tabindex="0" role="button" aria-label="Go to slide 5"></span><span class="swiper-pagination-bullet" tabindex="0" role="button" aria-label="Go to slide 6"></span><span class="swiper-pagination-bullet" tabindex="0" role="button" aria-label="Go to slide 7"></span></div>
+                <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span></div>
+            </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        //Initialize Swiper
+        var swiper = new Swiper(".mySwiper", {
+            slidesPerView: 5,
+            spaceBetween: 30,
+            initialSlide: 1, // 초기 슬라이드 인덱스를 0으로 설정
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+            navigation: {
+                nextEl : '.swiper-button-next',
+                prevEl : '.swiper-button-prev'
+            }});
+
+        //서버에서 받은 해당영화의 전체 코멘트
+        const urlParams = new URLSearchParams(window.location.search);
+        const movieID = urlParams.get('movieID');
+        const temp_comments_dict = `<%= JSON.stringify(locals.comments_result_dict) %>`;
+        const comments_dict = JSON.parse(temp_comments_dict.replace(/&#34;/g, '"'));
+        console.log("서버에서 받은 코멘트", comments_dict);
+        console.log()
+
+        for (let i = 0; i < Object.keys(comments_dict).length ; i++){
+            if (Object.keys(Object.values(comments_dict)[i])[0] == movieID.toString()){
+                let comment_item = Object.values(Object.values(comments_dict)[i])[0]
+                let firstComment = ''
+                firstComment = $("#list-group").children().first().text().trim();
+                if (firstComment == '이 영화에는 아직 댓글이 없습니다.'){
+                    $("#list-group li").first().remove();
+                }
+                let num = Math.floor(Math.random() * 1000000);
+                let comment_list= ` <li class="list-group-item d-flex justify-content-between align-items-center-${num}", id="list_group_item">
+              ${comment_item}
+                </li>`
+                $("#list-group").append(comment_list)
+            }
+        }
+        function addComment(){
+
+            const user_id =  `<%= locals.user_id%>`
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const movieID = urlParams.get('movieID');
+            let comments_dict = {}
+            if (user_id){
+                console.log("유저아이디", user_id);
+                let comment = $("#input-area").val();
+                let num = Math.floor(Math.random() * 1000000);
+                let item =`<li class="list-group-item d-flex justify-content-between align-items-center-${num}", id="list_group_item">
+                    ${user_id} : ${comment}
+                    </li>`
+                console.log("입력받은값!", item);
+                $("#list-group").append(item);
+                $("#input-area").val('')
+                let firstComments = ''
+                firstComments = $("#list-group").children().first().text().trim();
+                if (firstComments == '이 영화에는 아직 댓글이 없습니다.'){
+                    $("#list-group li").first().remove();
+                }
+                // comments_dict = {}
+                
+                for(let i = 0; i < $("#list-group").children().length; i++){
+                    comments_dict[i] = $("#list-group").children().eq(i).text().trim();
+                }
+                // 서버로 comments 값을 전송
+                fetch('/detailedmovie', {
+                    method : 'POST',
+                    headers : {
+                        'Content-Type' : 'application/json'
+                    },
+                    body : JSON.stringify({ comments_dict : comments_dict, movieID : movieID})
+                })
+                .then(response => {
+                    if (response.ok) {
+                        console.log('코멘트 전송 완료');
+                    } else {
+                        console.error('코멘트 전송 실패');
+                    }
+                })
+                .catch(error => {
+                    console.error("오류발생", error);
+                })
+            }
+            else{
+                $('#warning-modal').modal('show');
+            }
+        }
+        // 엔터 키 이벤트 처리
+        function handleKeyPress(event){
+            if (event.key === "Enter"){
+                addComment();
+            }
+        }
+        //엔터 키 이벤트를 감지할 요소
+        var inputArea = document.getElementById('input-area');
+
+        inputArea.addEventListener('keypress', handleKeyPress);
+
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const title = urlParams.get('title');
+            const genre = urlParams.get('genre');
+            const posterImg = urlParams.get('posterImg');
+            const date = urlParams.get('date');
+            const movieID = urlParams.get('movieID');
+            
+
+            // title을 사용하여 화면에 표시
+            if (title) {
+                console.log(`Title: ${decodeURIComponent(title)}`)
+                document.getElementById('title-container').innerText = decodeURIComponent(title);
+            }
+
+            if (genre){
+                console.log(`Genre : ${decodeURIComponent(genre)}`)
+                $(document).ready(function(){
+                    const options = {
+                    method: 'GET',
+                    headers: {
+                        accept: 'application/json',
+                        Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4Y2RiMTA4NmJmYjY1OTdkNzkyYTQwMTE4NjM5NmQwZSIsInN1YiI6IjY1YWNmMGE5ZjI2M2JhMDBlYWIzYmM0ZiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.2XC3aT7eN4o25YFPRrg5w2_DevTdrINWE9T6aNT00qc'
+                        }
+                    }
+                    fetch('https://api.themoviedb.org/3/genre/movie/list?language=en', options)
+                    .then(response => response.json())
+                    .then(response => {
+                        const movie_genres = response;
+                        console.log("장르종류", movie_genres.genres);
+
+                        const genreContainer = document.getElementById('genre-container')
+                        const genreValue = genre;
+                        const genresIDList = genreValue.split(',').map(value => parseInt(value.trim()))
+                        const genresNameList = [];
+                        console.log("장르값", genresIDList);
+
+                        for (let i = 0; i < genresIDList.length; i++){
+                            for (let j = 0; j < movie_genres.genres.length; j++){
+                                if(movie_genres.genres[j].id == genresIDList[i]){
+                                    genresNameList.push(movie_genres.genres[j].name);
+                                }
+                            }
+                        }
+
+                        const genresString = genresNameList.join('/');
+                        genreContainer.innerText = genresString;
+
+                        //평균 별점
+                        // const totalusersrating = '<%= JSON.stringify(locals.allusersRanking)%>'
+                        // console.log("토탈유저", totalusersrating);
+                        // const totalrank = JSON.parse(totalusersrating.replace(/&#34;/g, '"'))
+                        // console.log(totalrank);
+
+                    })
+                })
+                //document.getElementById('genre-container').innerText = decodeURIComponent(genre);
+            }
+            if (posterImg){
+                console.log(`poster_path : ${decodeURIComponent(posterImg)}`)
+                const imgElement = document.createElement('img'); // 새로운 이미지 엘리먼트 생성
+                imgElement.width = 300;
+                imgElement.height = 500;
+                imgElement.src = `https://image.tmdb.org/t/p/w500${decodeURIComponent(posterImg)}`;
+                console.log(imgElement.src);
+                document.getElementById('img-container').appendChild(imgElement); // 이미지를 container에 추가
+            }
+            if (date){
+                console.log(`release_date : ${decodeURIComponent(date)}`)
+                document.getElementById('date-container').innerText = decodeURIComponent(date);
+            }
+            if (movieID){
+                console.log(`movieID : ${decodeURIComponent(movieID)}`)
+                document.getElementById('movieID-container').innerText = decodeURIComponent(movieID);
+                let userRating; 
+                // 별점 부여
+                info = '<%= locals.movieinfo %>'
+                if (info){
+                    const filterMovieID ='<%= JSON.stringify(locals.movieinfo) %>';
+                    console.log("filterMovieID:", filterMovieID);
+
+                    const dict_id_rank = JSON.parse(filterMovieID.replace(/&#34;/g, '"'))
+                    console.log(dict_id_rank);
+
+                    if (dict_id_rank.hasOwnProperty(movieID.toString())){
+                        console.log('잇습니다')
+                        userRating = dict_id_rank[movieID];
+                        console.log(userRating);
+
+                        const ratingContainer = document.getElementById('rating-container');
+                        const radioInputs = document.querySelectorAll('.rating-item input[type="radio"]');
+                        const starRatingSpan = document.getElementById('star-rating-span');
+
+                        starRatingSpan.style.width = `${userRating * 20}%`;
+                    }
+                    else {
+                        console.log('없습니다')
+                    }
+                }
+
+                const totalusersrating = '<%= JSON.stringify(locals.allusersRanking)%>'
+                console.log("토탈유저", totalusersrating);
+                const totalrank = JSON.parse(totalusersrating.replace(/&#34;/g, '"'))
+                console.log(totalrank);
+
+                const newObjects = [];
+                for (let i = 0; i < totalrank.length ; i++){
+                    // console.log("item2", totalrank[i]);
+                    if (movieID == totalrank[i].movieID){
+                        newObjects.push(totalrank[i]);
+                    }
+                }
+                console.log("newObjects", newObjects);
+
+                let intRank = 0
+                for (const item of newObjects){
+                    intRank += item.rating;
+                }
+
+                const averageRank = intRank / newObjects.length;
+
+                const rounded_averageRank = Math.round(averageRank * 10) / 10;
+
+                document.getElementById('AverageRating').textContent = rounded_averageRank;
+
+                // for (const [key, value] of Object.entries(totalrank)){
+                //     if (Array.isArray(value) && value.indexOf(movieID) !== -1){
+                //         // newObjects[key] = value;
+                //         // console.log("new",newObjects);
+                //     }
+                // }
+            
+                // if (filterMovieID.hasOwnProperty(movieID)) {
+                //     const userRating = filterMovieID[movieID];
+                //     console.log(`User Rating for movie with ID ${movieID}: ${userRating}`);
+                // }
+                
+                // 해당 영화와 관련있는 영화 탐색
+                const temp_recommend_movie = `<%=JSON.stringify(locals.cartdataset)%>`;
+                const temp_recommend_movie2 = temp_recommend_movie.replace(/&#39;/g, '"');
+                const recommend_movie = JSON.parse(temp_recommend_movie2.replace(/&#34;/g, ''));
+                console.log("장바구니", recommend_movie);
+                console.log("무비아이디", movieID);
+
+                if (movieID.toString() in recommend_movie){
+
+                    // 서버에서 관련영화의 포스터를 찾아오기 위해서 서버로 보내기
+                    const recommend_movie_list = recommend_movie[movieID.toString()]
+
+                    fetch('/detailedmovie', {
+                        method : 'POST',
+                        headers : {
+                            'Content-Type' : 'application/json'
+                        },
+                        body : JSON.stringify({
+                            recommend_movie_list : recommend_movie_list, movieID : movieID
+                        })
+                    })
+                    .then(response => {
+                        if (response.ok){
+                            console.log("관련 영화 정보 전송 완료");
+                        }
+                        else {
+                            console.log("코멘트 전송 실패");
+                        }
+                    })
+                    .catch(error => {
+                        console.log("오류발생", error);
+                    })
+                }
+                else { 
+                    console.log("없음");
+                }
+                // 서버에서 받아온 관련영화의 포스터 
+                const related_movie_list_string= `<%= JSON.stringify(locals.related_movie_list )%>`
+                const related_movie_list = JSON.parse(related_movie_list_string.replace(/&#34;/g, '"'));
+                console.log("서버에서 받아온 관련영화포스터", related_movie_list);
+
+                $('#swiper-wrapper-b79a58c365105b8f10').html('');
+                let swiperInner = $("#swiper-wrapper-b79a58c365105b8f10");
+
+                if (movieID in related_movie_list){
+                    console.log(Object.keys(related_movie_list[movieID]));
+                    const imageUrls = related_movie_list[movieID];
+                    const keys = Object.keys(imageUrls);
+                    const length = keys.length;
+
+                    for (let relatedidx=0; relatedidx < length; relatedidx++){
+                        const swiperItem = `<div class="swiper-slide" role="group" aria-label="${relatedidx + 1} / ${length}" style="width: 250px; margin-right: 30px;"><img src="https://image.tmdb.org/t/p/w500${imageUrls[keys[relatedidx]].posterImg}" onclick="openpopup('${imageUrls[keys[relatedidx]].title}', '${imageUrls[keys[relatedidx]].genre}', '${imageUrls[keys[relatedidx]].posterImg}', '${imageUrls[keys[relatedidx]].date}', '${Object.keys(related_movie_list[movieID])[relatedidx]}')"></div>`;
+                        swiperInner.append(swiperItem);
+                    }
+                }
+                // 예상 별점
+                const prediction_list_stringify = `<%= JSON.stringify(locals.prediction_dict)%>`;
+
+                if (prediction_list_stringify){
+                    const prediction_dict = JSON.parse(prediction_list_stringify.replace(/&#34;/g, '"'));
+
+                    if (parseInt(movieID) in prediction_dict && !userRating){
+                        const predictive_rating = prediction_dict[parseInt(movieID)].predictive;
+                        const rounded_rating = Math.round(predictive_rating);
+                        // const predictiveRatingContainer = document.getElementById('PredictiveRating-container');
+                        document.getElementById('PredictiveRating').innerText = "Predictive Rating : " + rounded_rating;
+                        document.getElementById('PredictiveRating').add('predictiveRating-class');
+                    }
+                }
+
+                
+            }
+
+            // JavaScript로 별점 이벤트 핸들링
+            const ratingContainer = document.getElementById('rating-container');
+            const radioInputs = document.querySelectorAll('.rating-item input[type="radio"]');
+            const starRatingSpan = document.getElementById('star-rating-span');
+
+            ratingContainer.addEventListener('click', (event) => {
+                // 라디오 버튼이 클릭되었을 때 별점을 설정
+                const clickedRadio = event.target.closest('input[type="radio"]');
+                if (clickedRadio) {
+                    const rating = clickedRadio.value;
+                    console.log(`사용자가 ${rating}점을 선택했습니다.`);
+                    starRatingSpan.style.width = `${rating * 20}%`; // 변경된 부분
+
+                    const user_id = '<%= locals.user_id %>';
+
+                    if (user_id){
+                        // 서버로 rating 값을 전송
+                        fetch('/detailedmovie', {
+                            method : 'POST',
+                            headers : {
+                                'Content-Type' : 'application/json'
+                            },
+                            body : JSON.stringify({ rating : rating, movieID : movieID, title : title, genre: genre, posterImg, date : date})
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                console.log('별점 전송 완료');
+                            } else {
+                                console.error('별점 전송 실패');
+                            }
+                        })
+                        .catch(error => {
+                            console.error("오류발생", error);
+                        })
+                    }
+                    else{
+                        $('#warning-modal').modal('show');
+                    }
+                }
+            });
+
+            // 빈 공간을 클릭했을 때 라디오 버튼 선택 초기화
+            document.addEventListener('click', (event) => {
+                if (!event.target.closest('#rating-container')) {
+                    // 클릭된 요소가 rating-container 내부에 있는지 확인
+                    radioInputs.forEach(radio => {
+                        radio.checked = false;
+                    });
+                    starRatingSpan.style.width = `0%`;
+                }
+            });
+
+            // 초기화를 위해 라디오 버튼 중 첫 번째 버튼을 선택
+            radioInputs[0].checked = true;
+            });
+
+            function openpopup(title, genre, posterImg, date, movieID){
+                movieID = parseInt(movieID); 
+                window.location.href = `/detailedmovie?title=${encodeURIComponent(title)}&genre=${encodeURIComponent(genre)}&posterImg=${encodeURIComponent(posterImg)}&date=${encodeURIComponent(date)}&movieID=${encodeURIComponent(movieID)}`;
+            }
+
+    </script>
+</body>
+</html>

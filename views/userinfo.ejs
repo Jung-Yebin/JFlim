@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gasoek+One&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gasoek+One&family=Gowun+Batang&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    <!-- chart link -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <link href="/public/userinfo.css" rel="stylesheet">
+
+    <style>
+        /* .bi-pie-chart{
+            width: 50px;
+            height: 50px;
+        } */
+
+        .card{
+            width : 600px;
+            height : 300px;
+        }
+
+        #basicinfo-container{
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-light" style="background-color: #0A1D56;">
+        <a class="navbar-brand" href="/" id = "title_id">
+            <span style="color:#fff"><%= locals.title %></span>
+        </a>
+    </nav>
+    <!-- <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pie-chart" viewBox="0 0 16 16">
+        <path d="M7.5 1.018a7 7 0 0 0-4.79 11.566L7.5 7.793V1.018zm1 0V7.5h6.482A7.001 7.001 0 0 0 8.5 1.018zM14.982 8.5H8.207l-4.79 4.79A7 7 0 0 0 14.982 8.5zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"/>
+    </svg> -->
+    <br/></br>
+    <div class="container" id="basic-container">
+        <div class="row"></div>
+            <div>
+                <h3>name : <span><%= locals.user_id %></span></h3>
+            </div>
+            <div>
+                <h5>rated movie number : <span><%= locals.len_userinfo_dict%></span></h5>
+            </div>
+            <br></br>
+            <div class="container" id="piechart-container">
+                <h2>Pie Chart</h2>
+                <div class="row py-2">
+                    <div class="col-md-4 py-1">
+                        <div class="card">
+                            <div class="card-body">
+                                <canvas id="Donut1"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br></br>
+            <div class="container" id="rated-container">
+                <h2>Star Rating</h2>
+                <div class="row py-2">
+                    <div class="card">
+                        <div class="card-body">
+                            <canvas id="bar"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container" id="basicinfo-container">
+                <h5>Average Star Rating : <span id="AvergeStarRating"></span></h5>
+                <h5>lot of Point : <span id="lotofpoint"></span></h5>
+            </div>
+            <br></br>
+    </div>
+
+    <!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script> -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            let accessToken = "";
+            const options = {
+                method: 'GET',
+                headers: {
+                    accept: 'application/json',
+                    Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4Y2RiMTA4NmJmYjY1OTdkNzkyYTQwMTE4NjM5NmQwZSIsInN1YiI6IjY1YWNmMGE5ZjI2M2JhMDBlYWIzYmM0ZiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.2XC3aT7eN4o25YFPRrg5w2_DevTdrINWE9T6aNT00qc'
+                }
+            };
+
+            fetch('https://api.themoviedb.org/3/genre/movie/list?language=en', options)
+            .then(response => response.json())
+            .then(response => {
+                const userID = '<%= locals.user_id %>'
+                const movie_genres = response;
+                console.log("장르종류", movie_genres.genres);
+
+                const filterMovieID = '<%= JSON.stringify(locals.userinfo_dict)%>';
+                console.log("movieID", filterMovieID);
+
+                const dict_genreID = JSON.parse(filterMovieID.replace(/&#34;/g, '"'));
+                console.log(dict_genreID);
+
+                // const keys = Object.keys(dict_genreID);
+                // const length = keys.length;
+                // console.log(length);
+
+                // console.log(movie_genres.genres[0].name)
+
+                // const aaaa = movie_genres.genres.find(i =>i.id === 28);
+                // if (aaaa){
+                //     console.log(aaaa.name);
+                // }
+
+                const count_dict = {}
+                let genre_list = []
+                for (let namenum=0; namenum < movie_genres.genres.length; namenum++){
+                    console.log(movie_genres.genres[namenum].name)
+                    const genre = movie_genres.genres[namenum].name
+
+                    count_dict[genre] = 0;
+                }
+
+                for(const ID in dict_genreID){
+                    const gen = dict_genreID[ID].genreId
+
+                    for (let i = 0; i < gen.length; i ++ ){
+                        //console.log(gen[i])
+
+                        const a = movie_genres.genres.find(genre => genre.id === gen[i]);
+                        if(a){
+                            //console.log("이이ㅣ디", a.name);
+                            
+                            genre_list.push(a.name);
+                            count_dict[a.name] += 1;
+                        }
+                    }
+                }
+                for (let key in count_dict){
+                    if (count_dict[key] === 0){
+                        delete count_dict[key];
+                    }
+                }
+                console.log(count_dict)
+
+                // new_genre_list = [...new Set(genre_list)];
+                // console.log(new_genre_list)
+
+                var colors = ['#20b202', '#ffb6ff', '#c1c1c1', '#C12D', '#008', '#a16a', '#CD5', '#A48', '#20ba','#93DA', '#ffB', '#5BFF', '#96A5','#c3e6cb','#dc3545','#6c757d'];
+
+                var donutOptions = {
+                    cutoutPercentage: 30, //도넛두께 : 값이 클수록 얇아짐
+                    legend: {position:'bottom', padding:5, labels: {pointStyle:'circle', usePointStyle:true}}
+                };
+
+                //donut1
+                var donutData = {
+                    labels: Object.keys(count_dict),
+                    datasets: [{
+                        backgroundColor: colors.slice(0, count_dict.length),
+                        borderWidth: 0,
+                        data: Object.values(count_dict)
+                    }]
+                };
+                var Donut1 = document.getElementById("Donut1")
+                    if(Donut1){
+                        new Chart(Donut1,{
+                        type : 'pie',
+                        data : donutData,
+                        options : donutOptions
+                    })
+                };
+
+                console.log(dict_genreID);
+
+                // const rating_dict = {}
+                const rating_dict = {'1' : 0, '2' : 0, '3' : 0, '4' : 0, '5' : 0};
+                for (const q in dict_genreID){
+
+                    // console.log("q", dict_genreID[q].rating)
+                    const star_rating = dict_genreID[q].rating
+
+                    // rating_dict[star_rating] = 0
+
+                    // if(rating_dict.hasOwnProperty(star_rating)){
+                    //     rating_dict[star_rating] += 1;
+                    // }
+                    if(rating_dict.hasOwnProperty(star_rating)){
+                        rating_dict[star_rating] += 1;
+                    }
+                }
+                // console.log(test_dict);
+
+                console.log("rating_dict",rating_dict)
+
+                //Average Star Rating
+                let totalstarRating = 0
+                for(let i = 0; i < Object.keys(rating_dict).length; i ++ ){
+                    totalstarRating += parseInt(Object.keys(rating_dict)[i]) * Object.values(rating_dict)[i]
+                }
+                const countMovie = Object.values(rating_dict).reduce((acc, curr) => acc + curr, 0);
+                const AverageStar = (totalstarRating / countMovie);
+                //console.log(countMovie, AverageStar)
+                document.getElementById('AvergeStarRating').textContent = AverageStar;
+
+                //lot of Point
+                const values = Object.values(rating_dict);
+                const maxValue = Math.max(...values);
+                const maxKeys = Object.keys(rating_dict).filter(key => rating_dict[key] === maxValue);
+                console.log('maxKeys', maxKeys);
+                let str_maxCount = ''
+                for (let i = 0; i < maxKeys.length; i ++){
+                    str_maxCount += maxKeys[i] + ','
+                }
+                str_maxCount = str_maxCount.slice(0, -1);
+                //console.log(str_maxCount);
+                document.getElementById('lotofpoint').textContent = str_maxCount;
+                
+
+                var barData = {
+                    labels : ['One-Point', 'Two-Point', 'Three-Point', 'Four-Point', 'Five-Point'],
+                    datasets :[
+                        {
+                            backgroundColor: colors.slice(10, 15),
+                            data : Object.values(rating_dict)
+                        }
+                    ]
+                };
+
+                var bar = document.getElementById('bar')
+                    if(bar){
+                        new Chart(bar, {
+                            type : 'bar',
+                            data : barData,
+                            options : {
+                                legend: {
+                                    display : false
+                                },
+                                scales:{
+                                    yAxes: [{
+                                        ticks : {
+                                            suggestedMin: 0, // 최소값을 0으로 설정
+                                            beginAtZero: true // 축의 최소값을 0으로 시작하도록 설정
+                                        }
+                                    }]
+                                }
+                            }
+                        })
+                    }
+            })
+            .catch(error => {
+                    console.error("API 호출 중 오류 발생:", error);
+                    // 토큰 갱신 또는 다른 오류 처리를 여기에 추가
+            }); 
+        })
+    </script>
+</body>
+</html>

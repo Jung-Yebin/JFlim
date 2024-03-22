@@ -1,0 +1,33 @@
+*{
+    font-family: 'Gowun Batang', serif;
+}
+body{
+    background-color: #0A1D56;
+    color : #fff;
+}
+#main-container{
+    margin-top: 50px;
+    width:100%;
+    margin-bottom: 100px;
+}
+#title_id{
+    margin-left: 20px;
+}
+.custom-img {
+    margin-left: 30px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    width: 250px;
+    height: 350px;
+}
+.carousel-item {
+    position: relative;
+    overflow: hidden;
+}
+.carousel-caption{
+    text-align: right;
+    max-width: 80ch;
+    margin-left : auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

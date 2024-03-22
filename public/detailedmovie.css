@@ -1,0 +1,84 @@
+*{
+    font-family: 'Gowun Batang', serif;
+}
+body{
+    background-color: #0A1D56;
+    color : #fff;
+}
+#title_id{
+    margin-left: 20px;
+}
+.star-rating {
+    width:304px; 
+}
+.star-rating, .star-rating span {
+    display: inline-block;
+    height: 55px;
+    overflow: hidden;
+    background: url(star.png) no-repeat; /* 여기에 URL 추가 */
+}
+.star-rating span {
+    background-position: left bottom;
+    line-height: 0;
+    vertical-align: top;
+}
+#rating-container{
+    width: 500px;
+    height: 100px;
+    /* margin-top: 300px; */
+    margin-left : -72px;
+    margin-top: -43px;
+    text-align: center;
+}
+.rating-item{
+    width: 100%;
+    height: 100px;
+}
+.rating-item label{
+    margin-right: 46px;
+}
+.rating-item input[type="radio"] {
+    transform: scale(2.3);
+    opacity: 0;
+    cursor: pointer; 
+}
+#detailed-movie-container{
+    margin-left: 750px;
+    margin-top: -500px;
+}
+
+#img-container {
+    margin-top : 50px;
+}
+
+#comment-container{
+    margin-top: 200px;
+}
+
+#comment-subcontainer{
+    width: 100%;
+    height: 400px;
+    background-color: #fff;
+    border-radius: 20px;
+}
+
+#input-group{
+    margin-top: 10px;
+}
+
+#related-container {
+    margin-top : 210px;
+    margin-bottom: 100px;
+}
+
+.list-group-item {
+    border: none;
+}
+
+#warning-modal{
+    margin-top : 300px;
+    margin-left : 700px;
+    width : 500px;
+    height: 300px;
+    color : black;
+}
