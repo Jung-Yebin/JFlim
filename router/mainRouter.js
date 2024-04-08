@@ -574,4 +574,12 @@ router.get('/userinfo/:user_id', function(req, res){
     })
 })
 
+router.get('/test', function(req,res){
+    res.render('test')
+})
+
+router.get('/searchresults', function(req,res){
+    res.render('searchresults', {title : 'JFLIM'})
+})
+
 module.exports = router;

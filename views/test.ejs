@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <style>
+        body{
+          background-color: black;  
+        }
+        .Search-form {
+        display: flex;
+        align-items: center; /* 세로 중앙 정렬 */
+        }
+        .DocSearch-Search-Icon {
+            margin-right: 5px; /* SVG 이미지와 입력 상자 사이의 간격 조정 */
+        }
+    </style>
+
+</head>
+<body>
+    <div class="search_input_box">
+        <form class="Search-form">
+            <svg width="20" height="20" class="DocSearch-Search-Icon" viewBox="0 0 20 20" aria-hidden="true">
+                <path d="M14.386 14.386l4.0877 4.0877-4.0877-4.0877c-2.9418 2.9419-7.7115 2.9419-10.6533 0-2.9419-2.9418-2.9419-7.7115 0-10.6533 2.9418-2.9419 7.7115-2.9419 10.6533 0 2.9419 2.9418 2.9419 7.7115 0 10.6533z" stroke="white" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+            <input id="query" name="query" maxlength="255" autocomplete="off" class="search_input" data-atcmp-element="" list="searchItems">
+            <button class="btn-outline-secondary" type="button" id="search-button" onclick="searchMovie()">검색</button>
+            <datalist id="searchItems">
+                <!-- <option value="web">
+                <option value="samsung"> -->
+            </datalist>
+        </form>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+    <script>
+        
+        $(document).ready(function(){
+            let accessToken="";
+
+            const options = {
+                method:'GET',
+                headers : {
+                    accept: 'application/json',
+                    Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4Y2RiMTA4NmJmYjY1OTdkNzkyYTQwMTE4NjM5NmQwZSIsInN1YiI6IjY1YWNmMGE5ZjI2M2JhMDBlYWIzYmM0ZiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.2XC3aT7eN4o25YFPRrg5w2_DevTdrINWE9T6aNT00qc'
+                }
+            }
+
+            $("#query").on('input', function(){
+                let searchItemList = []
+                let userInput = $(this).val();
+                let itemInfo = {};
+                console.log(userInput)
+
+                fetch('https://api.themoviedb.org/3/search/movie?include_adult=false&language=en-US&page=1&query='+ userInput, options)
+                .then(response => response.json())
+                .then(response=>{
+
+                    console.log(response);
+
+                    // 검색 결과 5개만 출력
+                    k = 5
+                    for (let i = 0; i < k; i++){
+                        searchItemList.push(response.results[i].title)
+                    }
+                    console.log(searchItemList)
+                    $('#searchItems').html('');
+                    const searchItems = $('#searchItems');
+
+                    for (let i = 0; i < searchItemList.length; i++){
+                        let val = `<option value="${searchItemList[i]}">`;
+                        searchItems.append(val);
+                    }
+                    console.log(response.results.length);
+
+                    for (let response_length = 0; response_length < response.results.length; response_length++){
+                        let search_genre = response.results[response_length].genre_ids.join(',');
+                        itemInfo[response.results[response_length].id] = {'title' : response.results[response_length].title, 'posterImg' : response.results[response_length].poster_path, 'date' : response.results[response_length].release_date, 'genre' : search_genre}
+                         console.log(itemInfo)
+                        //console.log(response.results[response_length]);
+                    }
+
+                    })
+                })
+
+            // fetch('https://api.themoviedb.org/3/search/movie?include_adult=false&language=en-US&page=1&query=Wonka', options)
+            // .then(response => response.json())
+            // .then(response =>{
+            //     console.log(response);
+
+                
+            // })
+        })
+    </script>
+</body>
+</html>
